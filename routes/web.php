@@ -19,14 +19,15 @@ $apiRoutes = function () {
     Route::post('/api/user/register', 'AuthController@Register');
     Route::post('/api/user/login', 'AuthController@Login');
 
-    Route::group(['middleware' => 'JwtToken'], function (){
-        // Route::post('/api/group/', 'GroupController@CreateGroup');
-        // Route::post('/api/group/', 'GroupController@GetAllGroups');
-        // Route::post('/api/group/{id}', 'GroupController@UpdateGroup');
-        // Route::get('/api/group/{id}', 'GroupController@GetGroupDetails');
-        // Route::post('/api/group/{id}/add', 'GroupController@AddFriends');
+    Route::group(['middleware' => 'VerifyJwtToken'], function (){
+        Route::post('/api/groups/', 'GroupController@CreateGroup');
+        Route::get('/api/groups/', 'GroupController@GetAllGroups');
+        Route::get('/api/groups/{id}', 'GroupController@GetGroupDetails')
+            ->middleware('VerifyUserOfGroup');
+        
 
         Route::post('/api/categories/', 'CategoryController@CreateCategory');
+        Route::get('/api/categories/', 'CategoryController@GetAllCategories');
     });
 };
 

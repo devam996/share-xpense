@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
+use Exception;
 use Validator;
 use \Firebase\JWT\JWT;
 
@@ -28,26 +29,35 @@ class AuthController extends Controller
                 "message" => $validator->errors()->first()
             ];
         } else {
-            $userData = $requestData["user"];
+            try {
+                $userData = $requestData["user"];
 
-            $user = new User;
-            $user->fill($userData);
-            $user->password = bcrypt($userData["password"]);
-            $user->save();
+                $user = new User;
+                $user->fill($userData);
+                $user->password = bcrypt($userData["password"]);
+                $user->save();
 
-            $token = [
-                "uid" => $user->id,
-                "email" => strtolower($user->email),
-                "name" => $user->name
-            ];
+                $token = [
+                    "uid" => $user->id,
+                    "email" => strtolower($user->email),
+                    "name" => $user->name
+                ];
 
-            $jwt = JWT::encode($token, JWT_KEY);
+                $jwt = JWT::encode($token, JWT_KEY);
 
-            $status = 200;
-            $response = [
-                "token" => $jwt,
-                "message" => "User created successfully"
-            ];            
+                $status = 200;
+                $response = [
+                    "token" => $jwt,
+                    "message" => "User created successfully"
+                ];
+            } catch (Exception $e){
+                $status = 500;
+                $response = [
+                    "exception" => $e,
+                    "message" => $e->getMessage()
+                ];
+            }
+                        
         }
 
         return response($response, $status);
@@ -69,33 +79,43 @@ class AuthController extends Controller
                 "message" => $validator->errors()->first()
             ];
         } else {
-            $userData = $requestData["user"];
 
-            $user = User::where("email", $userData["email"])
-                        ->first();
-            
-            if(!password_verify($userData["password"], $user["password"])){
-                $status = 401;
-                $response = [
-                    "message" => "Password entered is incorrect"
-                ];
-            } else {
-                unset($user["password"]);
+            try {
+                $userData = $requestData["user"];
 
-                $token = [
-                    "uid" => $user["id"],
-                    "email" => strtolower($user["email"]),
-                    "name" => $user["name"],
-                ];
-    
-                $jwt = JWT::encode($token, JWT_KEY);
-    
-                $status = 200;
+                $user = User::where("email", $userData["email"])
+                            ->first();
+                
+                if(!password_verify($userData["password"], $user["password"])){
+                    $status = 401;
+                    $response = [
+                        "message" => "Password entered is incorrect"
+                    ];
+                } else {
+                    unset($user["password"]);
+
+                    $token = [
+                        "uid" => $user["id"],
+                        "email" => strtolower($user["email"]),
+                        "name" => $user["name"],
+                    ];
+        
+                    $jwt = JWT::encode($token, JWT_KEY);
+        
+                    $status = 200;
+                    $response = [
+                        "token" => $jwt,
+                        "message" => "Login successfull"
+                    ];
+                }
+            } catch (Exception $e){
+                $status = 500;
                 $response = [
-                    "token" => $jwt,
-                    "message" => "Login successfull"
+                    "exception" => $e,
+                    "message" => $e->getMessage()
                 ];
             }
+            
         }
 
         return response($response, $status);

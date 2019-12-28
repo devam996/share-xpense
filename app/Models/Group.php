@@ -17,7 +17,7 @@ class Group extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'created_by'
+        'name'
     ];    
 
     public $timestamps = true;

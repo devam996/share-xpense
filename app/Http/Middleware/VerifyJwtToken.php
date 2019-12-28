@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 use \Firebase\JWT\JWT;
 
 use Closure;
+use Exception;
 use Illuminate\Http\Response;
 use App\Models\User;
 
@@ -13,23 +14,33 @@ class VerifyJwtToken
     {
         $key = JWT_KEY;
 
-        $token = $request->header('Authorization');
+        try {
+            $token = $request->header('X-AUTH-TOKEN');
 
-        $userData = JWT::decode($token, $key, array('HS256'));
+            if(!isset($token)){
+                throw new Exception("Token not found");
+            }
 
-        $user = User::where('id', $userData->uid)
-                ->first();
+            $userData = JWT::decode($token, $key, array('HS256'));
 
-        if(!isset($user)){
+            $user = User::where('id', $userData->uid)
+                    ->first();
+
+            if(!isset($user)){
+                throw new Exception("User Unauthorized");
+            }
+            
+            $request->user = $user;
+            return $next($request);
+
+        } catch (Exception $e) {
             $status = 403;
             $response = [
-                "message" => "User Unauthorized"
+                "exception" => $e,
+                "message" => $e->getMessage()
             ];
-            return response(json_encode($response),$status);
+            return response($response,$status);
         }
         
-        $request->user = $user;
-        
-        return $next($request);
     }
 }

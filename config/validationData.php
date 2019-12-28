@@ -44,6 +44,18 @@ define("VALIDATION_DATA",
                     "category.title.min" => "Title of category is too short, minimum 3 characters required",
                 ]
             ],
+        ],
+        "GROUP" => [
+            "ADD" => [
+                "RULES" => [
+                    "group.name" => "bail|required|max:25|min:3",  
+                ],
+                "MESSAGES" => [
+                    "group.name.required" => "Title of category is required",
+                    "group.name.max" => "Title of category is too long, maximum 25 characters allowed",
+                    "group.name.min" => "Title of category is too short, minimum 3 characters required",
+                ]
+            ],
         ]
     ]
 );
