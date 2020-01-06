@@ -23,11 +23,20 @@ $apiRoutes = function () {
         Route::post('/api/groups/', 'GroupController@CreateGroup');
         Route::get('/api/groups/', 'GroupController@GetAllGroups');
         Route::get('/api/groups/{id}', 'GroupController@GetGroupDetails')
-            ->middleware('VerifyUserOfGroup');
+                ->middleware('VerifyUserOfGroup');
         
+        Route::post('/api/groups/{id}/settle', 'ExpenseController@SettleGroupExpenses')
+                ->middleware('VerifyUserOfGroup');
 
+        Route::post('/api/groups/{id}/expense', 'ExpenseController@CreateGroupExpenses')
+                ->middleware('VerifyUserOfGroup');
+        
         Route::post('/api/categories/', 'CategoryController@CreateCategory');
         Route::get('/api/categories/', 'CategoryController@GetAllCategories');
+
+        // Route::post('/api/expenses/', 'ExpenseController@CreateExpense');
+        // Route::get('/api/expenses/', 'ExpenseContoller@GetAllUserExpenses');
+        
     });
 };
 

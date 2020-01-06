@@ -17,7 +17,7 @@ class CreateExpensesTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('category_id');
 
-            $table->bigInteger('amount');
+            $table->decimal('amount',8,2);
             
             $table->unsignedBigInteger('recepient_id')->nullable();
 

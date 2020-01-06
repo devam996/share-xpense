@@ -18,11 +18,6 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            
-            $table->bigInteger('amount_due')->default(0);
-            $table->bigInteger('amount_owe')->default(0);
-            $table->bigInteger('amount_paid')->default(0);
-
             $table->softDeletes();
             $table->timestamps();
         });

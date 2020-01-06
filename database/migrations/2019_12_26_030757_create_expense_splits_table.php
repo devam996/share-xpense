@@ -21,8 +21,8 @@ class CreateExpenseSplitsTable extends Migration
             $table->unsignedBigInteger('expense_id');
             $table->unsignedBigInteger('group_user_id')->nullable();
 
-            $table->integer('amount');
-            $table->boolean('paid')->default(false);
+            $table->decimal('amount',8,2);
+            $table->decimal('paid_amount', 8, 2);
 
             $table->softDeletes();
             $table->timestamps();

@@ -18,7 +18,17 @@ class Group extends Model
      */
     protected $fillable = [
         'name'
-    ];    
+    ];
+
+    public function groupUsers()
+    {
+        return $this->hasMany('App\Models\GroupUser', 'group_id');
+    }
+
+    public function expenses()
+    {
+        return $this->hasMany('App\Models\Expense', 'group_id');
+    }
 
     public $timestamps = true;
     protected $dates = ['deleted_at'];

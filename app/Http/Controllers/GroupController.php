@@ -117,24 +117,26 @@ class GroupController extends Controller
 
         try {
 
-            $group = Group::where("id", $groupId)->first();
+            $group = Group::where("id", $groupId)
+                        ->with("expenses")
+                        ->first();
 
+        
             $groupUsers = GroupUser::where("group_id", $groupId)
                         ->with("user")
                         ->get();
         
-            
-
             foreach ($groupUsers as $index => $groupUser) {
                 $groupUsers[$index]["user_name"] = $groupUser["user"]["name"];
                 unset($groupUsers[$index]["user"]);
             }
 
+            $group["groupUsers"] = $groupUsers;
+
             $status = 200;
             $response = [
                 "group" => $group,
-                "groupUsers" => $groupUsers,
-                "message" => "Groups found successfully"
+                "message" => "Group details found successfully"
             ];
 
         } catch (Exception $e){

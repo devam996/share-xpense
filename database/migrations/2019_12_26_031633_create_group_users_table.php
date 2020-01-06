@@ -18,9 +18,9 @@ class CreateGroupUsersTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('group_id');
             
-            $table->bigInteger('amount_due')->default(0);
-            $table->bigInteger('amount_owe')->default(0);
-            $table->bigInteger('amount_paid')->default(0);
+            $table->decimal('amount_due',8,2)->default(0);
+            $table->decimal('amount_owe',8,2)->default(0);
+            $table->decimal('amount_paid',8,2)->default(0);
 
             $table->softDeletes();
             $table->timestamps();
